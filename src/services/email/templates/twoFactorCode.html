@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>আপনার নিরাপত্তা কোড - মৌলভীবাজার মাদ্রাসা</title>
+    <!--[if mso]>
+      <noscript>
+        <xml>
+          <o:OfficeDocumentSettings>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+          </o:OfficeDocumentSettings>
+        </xml>
+      </noscript>
+    <![endif]-->
+    <style>
+      /* Reset and base styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background: #f6f9fc;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        color: #2d3748;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      /* Email container */
+      .email-wrapper {
+        width: 100%;
+        background: #f6f9fc;
+        padding: 20px 0;
+        min-height: 100vh;
+      }
+
+      .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Header section */
+      .header {
+        background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+        padding: 40px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='m0 40l40-40h-40z'/%3E%3Cpath d='m0 40l40-40h-40z'/%3E%3C/g%3E%3C/svg%3E")
+          repeat;
+        animation: float 20s linear infinite;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(-40px, -40px);
+        }
+      }
+
+      .logo {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .tagline {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 16px;
+        font-weight: 400;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Shield icon for security */
+      .security-shield {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        margin: 20px auto 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .security-shield::before {
+        content: '🔐';
+        font-size: 24px;
+      }
+
+      /* Main content */
+      .content {
+        padding: 50px 40px;
+      }
+
+      .greeting {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        color: #4a5568;
+        margin-bottom: 30px;
+      }
+
+      .message {
+        font-size: 16px;
+        color: #4a5568;
+        margin-bottom: 35px;
+        line-height: 1.7;
+      }
+
+      /* Code display section */
+      .code-section {
+        background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+        border: 2px solid #14b8a6;
+        border-radius: 16px;
+        padding: 40px 30px;
+        margin: 35px 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .code-section::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #14b8a6, #0f766e, #14b8a6);
+        border-radius: 16px;
+        z-index: -1;
+        animation: shimmer 3s linear infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: -200% center;
+        }
+        100% {
+          background-position: 200% center;
+        }
+      }
+
+      .code-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #0f766e;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .verification-code {
+        font-size: 48px;
+        font-weight: 800;
+        color: #0f766e;
+        letter-spacing: 8px;
+        font-family:
+          'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+        text-shadow: 0 2px 4px rgba(15, 118, 110, 0.1);
+        margin: 10px 0;
+      }
+
+      .code-expiry {
+        font-size: 14px;
+        color: #0f766e;
+        font-weight: 500;
+        margin-top: 15px;
+      }
+
+      /* Timer visual */
+      .timer-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 25px 0;
+      }
+
+      .timer-icon {
+        width: 20px;
+        height: 20px;
+        background: #f59e0b;
+        border-radius: 50%;
+        margin-right: 8px;
+        position: relative;
+      }
+
+      .timer-icon::before {
+        content: '⏰';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 10px;
+      }
+
+      .timer-text {
+        font-size: 14px;
+        color: #92400e;
+        font-weight: 600;
+      }
+
+      /* Security warning */
+      .security-warning {
+        display: flex;
+        background: linear-gradient(135deg, #fef7e0 0%, #fef3c7 100%);
+        border: 1px solid #f59e0b;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 30px 0;
+      }
+
+      .warning-icon {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: #f59e0b;
+        border-radius: 50%;
+        margin-right: 8px;
+        position: relative;
+        vertical-align: middle;
+      }
+
+      .warning-icon::before {
+        content: '⚠️';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 10px;
+      }
+
+      .warning-text {
+        font-size: 14px;
+        color: #92400e;
+        display: inline-block;
+        vertical-align: middle;
+        width: calc(100% - 30px);
+      }
+
+      /* Instructions section */
+      .instructions {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+      }
+
+      .instructions-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 15px;
+      }
+
+      .instructions-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .instructions-list li {
+        font-size: 14px;
+        color: #4a5568;
+        margin-bottom: 8px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .instructions-list li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #059669;
+        font-weight: bold;
+      }
+
+      /* Footer */
+      .footer {
+        background: #f8fafc;
+        padding: 40px;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .footer-text {
+        font-size: 14px;
+        color: #718096;
+        margin-bottom: 20px;
+      }
+
+      .footer-links {
+        margin: 20px 0;
+      }
+
+      .footer-link {
+        color: #0f766e;
+        text-decoration: none;
+        margin: 0 15px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .footer-link:hover {
+        text-decoration: underline;
+      }
+
+      .copyright {
+        font-size: 12px;
+        color: #a0aec0;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      /* Responsive design */
+      @media only screen and (max-width: 600px) {
+        .email-container {
+          margin: 10px;
+          border-radius: 12px;
+        }
+
+        .header {
+          padding: 30px 20px;
+        }
+
+        .content {
+          padding: 30px 25px;
+        }
+
+        .footer {
+          padding: 30px 25px;
+        }
+
+        .verification-code {
+          font-size: 36px;
+          letter-spacing: 6px;
+        }
+
+        .greeting {
+          font-size: 22px;
+        }
+
+        .code-section {
+          padding: 30px 20px;
+        }
+      }
+
+      /* Dark mode support */
+      @media (prefers-color-scheme: dark) {
+        .email-container {
+          background: #1a202c;
+          color: #e2e8f0;
+        }
+
+        .greeting {
+          color: #f7fafc;
+        }
+
+        .message,
+        .subtitle {
+          color: #cbd5e0;
+        }
+
+        .instructions {
+          background: #2d3748;
+          border-color: #4a5568;
+        }
+
+        .footer {
+          background: #2d3748;
+          border-color: #4a5568;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-wrapper">
+      <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+          <div class="logo">মৌলভীবাজার মাদ্রাসা</div>
+          <div class="tagline">ইসলামিক শিক্ষা ও শেখা</div>
+          <div class="security-shield"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+          <div class="greeting">আস-সালামু আলাইকুম, {{user_name}}!</div>
+          <div class="subtitle">দ্বি-ফ্যাক্টর অথেন্টিকেশন কোড</div>
+
+          <div class="message">
+            আপনার একাউন্টে লগইন করার জন্য নিচের যাচাইকরণ কোডটি ব্যবহার করুন। এই কোডটি আপনার
+            একাউন্টের অতিরিক্ত নিরাপত্তার জন্য।
+          </div>
+
+          <div class="code-section">
+            <div class="code-label">আপনার নিরাপত্তা কোড</div>
+            <div class="verification-code">{{code}}</div>
+            <div class="code-expiry">এই কোডটি ৩ মিনিটের মধ্যে মেয়াদ শেষ হবে</div>
+          </div>
+
+          <div class="timer-container">
+            <div class="timer-icon"></div>
+            <div class="timer-text">দ্রুত ব্যবহার করুন - সীমিত সময়ের জন্য বৈধ</div>
+          </div>
+
+          <div class="instructions">
+            <div class="instructions-title">কীভাবে ব্যবহার করবেন:</div>
+            <ul class="instructions-list">
+              <li>উপরে পাওয়া ৪-সংখ্যার কোডটি টাইপ করুন</li>
+              <li>"যাচাই করুন" বা "Continue" বাটনে ক্লিক করুন</li>
+              <li>আপনার একাউন্টে সফলভাবে প্রবেশ করুন</li>
+            </ul>
+          </div>
+
+          <div class="security-warning">
+            <span class="warning-icon"></span>
+            <span class="warning-text">
+              <strong>সতর্কতা:</strong> যদি লগইন করতে কোনো সমস্যা হচ্ছে বা আপনি নিজের অ্যাকাউন্টে
+              সন্দেহজনক কার্যকলাপ দেখেন, দয়া করে অবিলম্বে পাসওয়ার্ড পরিবর্তন করুন এবং আমাদের সাথে
+              যোগাযোগ করুন।
+            </span>
+          </div>
+
+          <div class="message">
+            এই কোডটি কারো সাথে শেয়ার করবেন না। আমাদের প্রতিনিধিরা কখনো আপনার কাছে এই কোড চাইবেন না।
+          </div>
+
+          <div style="margin-top: 40px">
+            <strong>আল্লাহ হাফেজ,</strong><br />
+            মৌলভীবাজার মাদ্রাসা টিম
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <div class="footer-text">
+            যদি আপনি লগইন করার চেষ্টা না করে থাকেন, তাহলে এই ইমেইলটি উপেক্ষা করুন।
+          </div>
+
+          <div class="footer-links">
+            <a href="#" class="footer-link">সহায়তা কেন্দ্র</a>
+            <a href="#" class="footer-link">যোগাযোগ</a>
+            <a href="#" class="footer-link">নিরাপত্তা নীতি</a>
+          </div>
+
+          <div class="copyright">
+            © ২০২৫ মৌলভীবাজার মাদ্রাসা। সকল অধিকার সংরক্ষিত।<br />
+            এই ইমেইলটি মৌলভীবাজার মাদ্রাসা ঠিকানায় পাঠানো হয়েছে নিরাপত্তা যাচাইকরণের জন্য।
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
