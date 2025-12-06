@@ -1,249 +1,353 @@
-# 🧠 Backend API with TypeScript | Modular Structure
+# 🚀 Backend Server Template 2.0
 
-This is a scalable and production-ready **Node.js + TypeScript** backend API project following a **modular folder structure** with integrated tools like **ESLint**, **Prettier**, and custom error handling.
+<div align="center">
 
----
+![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Latest-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
 
-## 📁 Project Structure
+**A production-grade Node.js + TypeScript backend with enterprise-level architecture**
 
-```
-src/
-│
-├── app/                         # App-level configs & helpers
-│   └── query/
-│       └── qb.ts
-│
-├── config/                      # Environment & global config files
-│   ├── db.ts
-│   └── env.ts
-│
-├── middlewares/                 # Express middlewares (global)
-│   ├── errorHandler.ts
-│   ├── notFoundHandler.ts
-│   └── validateRequest.ts
-│
-├── errors/
-│   ├── handlers/
-│   │   ├── duplicateKeyErrorHandler.ts
-│   │   ├── jwtErrorHandler.ts
-│   │   ├── mongooseCastErrorHandler.ts
-│   │   ├── mongooseValidationErrorHandler.ts
-│   │   ├── syntaxErrorHandler.ts
-│   │   └── zodErrorHandler.ts
-│   └── apiErrors.ts
-│
-├── modules/                    # Feature-based modular system
-│   └── user/                   # User domain/module
-│       ├── user.controller.ts
-│       ├── user.interface.ts
-│       ├── user.model.ts
-│       ├── user.router.ts
-│       ├── user.schema.ts
-│       └── user.service.ts
-│
-├── routes/                     # App-wide route registry
-│   └── index.ts
-│
-├── scripts/                    # Seeders & one-time scripts
-│   ├── seedSuperAdmin.ts
-│   └── superAdminCreateDetail.ts
-│
-├── services/                   # Custom reusable service layer
-│   └── existCheckService.ts
-│
-├── utils/                      # Utilities & helpers
-│   ├── apiError.ts
-│   ├── catchAsync.ts
-│   ├── hash.ts
-│   └── response.ts
-│
-├── app.ts                      # App initialization
-├── index.ts                    # Server entry point
-│
-├── .env                        # Environment variables
-├── .eslint.config.mjs          # ESLint config
-├── .prettierignore             # Prettier ignore config
-├── .prettierrc                 # Prettier config
-├── package.json                # Package manifest
-├── README.md                   # Project README
-└── tsconfig.json               # TypeScript config
+[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
-```
+</div>
 
 ---
 
-## 🧰 Tech Stack
+## ✨ Features
 
-- **Node.js**
-- **TypeScript**
-- **ESLint** (with `typescript-eslint` & Prettier)
-- **Prettier** (code formatter)
-- **Modular Folder Structure**
-- **Custom Error Handling**
-- **dotenv** for environment configs
+<table>
+<tr>
+<td>
 
-## 🚀 Getting Started
+🏗️ **Architecture**
 
-### ✅ Installation Guide
+- Modular & Scalable Design
+- Clean Code Principles
+- SOLID Principles
+- MVC Pattern
 
-Clone the repository using **SSH** or **HTTPS**, then install the dependencies:
+</td>
+<td>
+
+🔐 **Security**
+
+- JWT Authentication
+- Clerk Integration
+- Role-based Access Control
+- Rate Limiting
+
+</td>
+</tr>
+<tr>
+<td>
+
+📦 **Database**
+
+- MongoDB + Mongoose
+- Schema Validation
+- Query Builders
+- Aggregation Pipelines
+
+</td>
+<td>
+
+🛠️ **Developer Tools**
+
+- ESLint + Prettier
+- Husky Git Hooks
+- Commitlint
+- Hot Reload
+
+</td>
+</tr>
+</table>
 
 ---
 
-#### 🔗 Clone using SSH
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+| Tool    | Version | Download                               |
+| ------- | ------- | -------------------------------------- |
+| Node.js | v18+    | [nodejs.org](https://nodejs.org)       |
+| pnpm    | Latest  | `npm install -g pnpm`                  |
+| MongoDB | Latest  | [mongodb.com](https://www.mongodb.com) |
+| Git     | Latest  | [git-scm.com](https://git-scm.com)     |
+
+---
+
+## 🚀 Quick Start
+
+### 1️⃣ Clone Repository
+
+<details open>
+<summary><b>SSH (Recommended)</b></summary>
 
 ```bash
-git clone git@github.com:Anirbandasjoy/APIForge.git
+git clone git@github.com:Anirbandasjoy/server-template-2.0.git
+cd server-template-2.0
+pnpm install
 ```
+
+</details>
+
+<details>
+<summary><b>HTTPS</b></summary>
 
 ```bash
-cd APIForge
+git clone https://github.com/Anirbandasjoy/server-template-2.0.git
+cd server-template-2.0
+pnpm install
 ```
+
+</details>
+
+### 2️⃣ Environment Configuration
+
+Create your `.env` file:
 
 ```bash
-yarn
+cp .env.example .env
 ```
 
-#### 🌐 Or, clone using HTTPS
+<details>
+<summary><b>📝 View Environment Variables</b></summary>
+
+```env
+# Server Configuration
+PORT=5000
+NODE_ENV=development
+SERVER_URI=http://localhost:5000
+CLIENT_URI=http://localhost:3000
+CORS_ORIGINS=http://localhost:3000
+
+# Database
+MONGO_URI=mongodb://localhost:27017/authDBEXP
+
+# Clerk Authentication
+CLERK_PUBLISHABLE_KEY=your_publishable_key
+CLERK_SECRET_KEY=your_secret_key
+CLERK_WEBHOOK_SECRET=your_webhook_secret
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+
+</details>
+
+### 3️⃣ Initialize Git Hooks
 
 ```bash
-git clone https://github.com/Anirbandasjoy/APIForge.git
+pnpm run prepare
 ```
+
+> ✅ This activates pre-commit linting, auto-formatting, and commit message validation
+
+### 4️⃣ Start Development
 
 ```bash
-cd APIForge
+pnpm dev
 ```
 
-```bash
-yarn
+Your server is now running at `http://localhost:5000` 🎉
+
+---
+
+## 📜 Available Scripts
+
+| Command                | Description                              |
+| ---------------------- | ---------------------------------------- |
+| `pnpm dev`             | Start development server with hot reload |
+| `pnpm build`           | Build for production                     |
+| `pnpm start`           | Start production server                  |
+| `pnpm lint`            | Run ESLint                               |
+| `pnpm lint:fix`        | Fix ESLint errors                        |
+| `pnpm format`          | Format code with Prettier                |
+| `pnpm fix-all`         | Run lint:fix and format                  |
+| `pnpm seed:superadmin` | Seed super admin user                    |
+| `pnpm clear`           | Clean dist/, node_modules/, yarn.lock    |
+
+---
+
+## 📂 Project Structure
+
 ```
-
-✨ You're now ready to start developing!
-
-## 📜 Scripts
-
-```json
-"scripts": {
-    "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
-    "build": "tsc && tsc-alias",
-    "start": "node dist/index.js",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
-    "fix-all": "eslint . --ext .js,.ts,.tsx --fix && prettier --write .",
-    "seed:superadmin": "ts-node -r tsconfig-paths/register src/scripts/seedSuperAdmin.ts",
-    "clear": "rm -rf dist node_modules yarn.lock"
-  },
+server-template-2.0/
+│
+├── 📁 src/
+│   ├── 📁 app/
+│   │   ├── 📁 errors/          # Error handling
+│   │   ├── 📁 helper/          # Helper functions
+│   │   ├── 📁 libs/            # Libraries & utilities
+│   │   ├── 📁 middlewares/     # Express middlewares
+│   │   ├── 📁 modules/         # Feature modules
+│   │   │   ├── 📁 auth/        # Authentication
+│   │   │   └── 📁 user/        # User management
+│   │   ├── 📁 routes/          # Route definitions
+│   │   └── 📁 schema/          # Validation schemas
+│   │
+│   ├── 📁 config/              # Configuration files
+│   ├── 📁 scripts/             # Utility scripts
+│   ├── 📁 services/            # Business logic services
+│   ├── 📁 types/               # TypeScript types
+│   ├── 📁 utils/               # Utility functions
+│   │
+│   ├── 📄 app.ts               # Express app setup
+│   └── 📄 index.ts             # Entry point
+│
+├── 📁 .husky/                  # Git hooks
+├── 📁 dist/                    # Compiled code
+│
+├── 📄 .env.example             # Environment template
+├── 📄 tsconfig.json            # TypeScript config
+├── 📄 eslint.config.mjs        # ESLint config
+├── 📄 commitlint.config.cjs    # Commitlint config
+└── 📄 package.json             # Dependencies
 ```
 
 ---
 
-## 📜 Scripts & Usage Guide
+## 🎯 Commit Convention
 
-| Script                 | Description                                                                 |
-| ---------------------- | --------------------------------------------------------------------------- |
-| `yarn dev`             | Start development server using `ts-node-dev` with path alias support.       |
-| `yarn build`           | Build the project using `tsc` and apply alias mappings with `tsc-alias`.    |
-| `yarn start`           | Run the compiled JavaScript from the `dist/` folder (used in production).   |
-| `yarn lint`            | Check for ESLint issues in `.ts` files.                                     |
-| `yarn lint:fix`        | Automatically fix lint issues.                                              |
-| `yarn format`          | Format all files using Prettier.                                            |
-| `yarn fix-all`         | Fix all ESLint and Prettier issues in one command.                          |
-| `yarn seed:superadmin` | Run the script to seed the default super admin user.                        |
-| `yarn clear`           | Clean up the project by deleting `dist/`, `node_modules/`, and `yarn.lock`. |
+We follow [Conventional Commits](https://www.conventionalcommits.org/) specification:
 
----
-
-### 🧪 Common Commands
+### ✅ Valid Commits
 
 ```bash
-yarn dev            # Start the development server
-yarn build          # Build the project
-yarn start          # Start the production server
-
-yarn lint           # Check for lint issues
-yarn lint:fix       # Auto fix lint issues
-yarn format         # Format code using Prettier
-yarn fix-all        # Fix both ESLint and Prettier issues
-
-yarn seed:superadmin  # Seed a default super admin user
-yarn clear            # Remove dist, node_modules, and yarn.lock
+feat: add user authentication
+fix: resolve login validation bug
+docs: update API documentation
+style: format code with prettier
+refactor: restructure auth module
+test: add unit tests for user service
+chore: update dependencies
 ```
 
----
-
-## 📦 Environment Variables
-
-Create a `.env` file in the root and configure like:
-
-```
-PORT
-MONGO_URI
-JWT_SECRET
-NODE_ENV
-CLIENT_URI
-
-SUPER_ADMIN_NAME
-SUPER_ADMIN_EMAIL
-SUPER_ADMIN_PASSWORD
-NODE_ENV
-
-
-
-SMTP_USERNAME
-SMTP_PASSWORD
-
-
-
-JWT_ACCESS_SECRET_KEY
-JWT_ACCESS_EXPIRES_IN
-
-
-
-
-JWT_REFRESH_SECRET_KEY
-JWT_REFRESH_EXPIRES_IN
-
-
-
-JWT_PROCESS_REGISTRATION_SECRET_KEY
-JWT_PROCESS_REGISTRATION_EXPIRES_IN
-
-
-
-JWT_PASSWORD_FORGOT_PASSWORD_SECRET
-JWT_PASSWORD_FORGOT_PASSWORD_EXPIRES_IN
-```
-
----
-
-## 🧪 Seeder Example
-
-To create a default super admin:
+### ❌ Invalid Commits
 
 ```bash
-yarn seed:superadmin
+updated files          # Missing type
+Fix bug               # Wrong case
+added new feature.    # Period at end
 ```
 
----
-
-## 🧹 Linting Configuration
-
-- No `var` allowed (must use `let` or `const`)
-- ESLint integrated with Prettier
-- Auto format on save supported
+> **Note:** Invalid commits will be automatically rejected by Husky
 
 ---
 
-## 📞 Contact & Author Info
+## 🔧 Tech Stack
 
-**Anirban Das joy**  
-_Backend Developer | MERN Stack Enthusiast_  
-Moulvibazar Polytechnic Institute, Department of CSE
+<div align="center">
 
-- 📧 Email: [joy600508@gmail.com](mailto:joy600508@gmail.com)
-- 💻 GitHub: [github.com/Anirbandasjoy](https://github.com/Anirbandasjoy)
-- 🔗 LinkedIn: [linkedin.com/in/anirbandasjoy404](https://www.linkedin.com/in/anirbandasjoy404)
-- 📘 Facebook: [facebook.com/anirbandasjoy](https://web.facebook.com/Anirbandasjoy)
+### Backend
 
-Feel free to reach out for collaboration, questions, or freelance projects!
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
+
+### Database
+
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white)
+
+### Authentication
+
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+![Clerk](https://img.shields.io/badge/Clerk-6C47FF?style=for-the-badge&logo=clerk&logoColor=white)
+
+### Development Tools
+
+![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)
+![Husky](https://img.shields.io/badge/Husky-00D100?style=for-the-badge)
+
+### Package Manager
+
+![pnpm](https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white)
+
+</div>
+
+---
+
+## 🚢 Deployment
+
+### Production Build
+
+```bash
+# Build the project
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+### Environment Setup
+
+Ensure these variables are set in production:
+
+- `NODE_ENV=production`
+- Valid MongoDB connection string
+- Production API keys
+- Proper CORS origins
+
+### Recommended Platforms
+
+- **[Vercel](https://vercel.com)** - Serverless deployment
+- **[Railway](https://railway.app)** - Container deployment
+- **[Render](https://render.com)** - Full-stack deployment
+- **[AWS EC2](https://aws.amazon.com/ec2/)** - Self-hosted
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please check out our [Contributing Guide](CONTRIBUTING.md).
+
+### Development Workflow
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feat/amazing-feature`
+3. Commit your changes: `git commit -m 'feat: add amazing feature'`
+4. Push to the branch: `git push origin feat/amazing-feature`
+5. Open a Pull Request
+
+---
+
+## 👨‍💻 Author
+
+<div align="center">
+
+### **Anirban Das Joy**
+
+Backend Developer | MERN Stack Enthusiast  
+**Moulvibazar Polytechnic Institute** — Department of CSE
+
+[![Email](https://img.shields.io/badge/Email-joy600508@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:joy600508@gmail.com)
+[![GitHub](https://img.shields.io/badge/GitHub-Anirbandasjoy-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Anirbandasjoy)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-anirbandasjoy404-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/anirbandasjoy404)
+[![Facebook](https://img.shields.io/badge/Facebook-Anirbandasjoy-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://web.facebook.com/Anirbandasjoy)
+
+</div>
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🌟 Show Your Support
+
+Give a ⭐️ if this project helped you!
+
+<div align="center">
+
+**Made with ❤️ by Anirban Das Joy**
+
+</div>
