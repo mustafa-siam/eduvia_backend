@@ -219,13 +219,17 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/) specifica
 ### ✅ Valid Commits
 
 ```bash
-feat: add user authentication
-fix: resolve login validation bug
-docs: update API documentation
-style: format code with prettier
-refactor: restructure auth module
-test: add unit tests for user service
-chore: update dependencies
+    feat, // New feature
+    fix, // Bug fix
+    docs, // Documentation changes
+    style, // Code style changes (formatting, etc)
+    refactor, // Code refactoring
+    perf, // Performance improvements
+    test, // Adding or updating tests
+    chore, // Maintenance tasks
+    ci, // CI/CD changes
+    build, // Build system changes
+    revert, // Revert previous commit
 ```
 
 ### ❌ Invalid Commits
