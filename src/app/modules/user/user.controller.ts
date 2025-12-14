@@ -15,8 +15,9 @@ const userUpdateHandler = catchAsync(async (req, res) => {
   sendSuccessResponse(res, {
     statusCode: StatusCodes.OK,
     message: 'User updated successfully',
-    data: updatedUser,
+    ddfata: updatedUser,
   });
+  dfdfdf;
 });
 
 const getAllUsersHandler = catchAsync(async (req, res) => {
