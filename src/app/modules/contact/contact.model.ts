@@ -1,12 +1,26 @@
 import { Schema, model, Document } from 'mongoose';
-import { IContact } from './contact.schema';
 
-const contactSchema = new Schema<IContact & Document>(
+export interface IContact extends Document {
+  name: string;
+  email: string;
+  phone: string;
+  destination: string;
+  status: 'pending' | 'contacted' | 'resolved';
+}
+
+const contactSchema = new Schema<IContact>(
   {
     name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    destination: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ['pending', 'contacted', 'resolved'],
+      default: 'pending',
+    },
   },
   { timestamps: true }
 );
 
-const ContactModel = model<IContact & Document>('Contact', contactSchema);
-export default ContactModel;
+export const ContactModel = model<IContact>('Contact', contactSchema);

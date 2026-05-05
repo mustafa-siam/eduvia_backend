@@ -1,19 +1,26 @@
-import { Router } from 'express';
-import { contactController } from './contact.controller';
-import validateRequest from '@/app/middlewares/validateRequest';
-import { contactSchema } from './contact.schema';
-import { defineRoutes } from '@/utils/defineRoutes';
+import express from 'express';
+import validateRequest from '../../middlewares/validateRequest';
+import { ContactControllers } from './contact.controller';
+import { contactValidation } from './contact.schema';
 
-const contactRouter = Router();
+const router = express.Router();
 
-defineRoutes(contactRouter, [
-  {
-    method: 'post',
-    path: '/create',
-    middlewares: [validateRequest(contactSchema.createContact)],
-    handler: contactController.contactHandler,
-  },
-  // add other routes as needed
-]);
+/* PUBLIC */
+router.post(
+  '/',
+  validateRequest(contactValidation.createContact),
+  ContactControllers.createContact
+);
 
-export default contactRouter;
+/* DASHBOARD */
+router.get('/', ContactControllers.getAllContacts);
+
+router.patch(
+  '/:id',
+  validateRequest(contactValidation.updateStatus),
+  ContactControllers.updateContactStatus
+);
+
+router.delete('/:id', ContactControllers.deleteContact);
+
+export const ContactRoutes = router;
