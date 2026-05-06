@@ -39,6 +39,19 @@ const updateContactStatus = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+/* TOGGLE PIN ⭐ */
+const togglePin = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const result = await contactService.togglePin(id);
+
+  sendSuccessResponse(res, {
+    statusCode: 200,
+    message: 'Pin toggled successfully',
+    data: result,
+  });
+});
+
 /* DELETE */
 const deleteContact = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -56,5 +69,6 @@ export const ContactControllers = {
   createContact,
   getAllContacts,
   updateContactStatus,
+  togglePin,
   deleteContact,
 };

@@ -5,6 +5,7 @@ import { teamSchema } from './team.schema';
 import { defineRoutes } from '@/utils/defineRoutes';
 import { authMiddleware } from '../auth/auth.middleware';
 import { commonSchema } from '@/app/schema/common.schema';
+import { upload } from '@/utils/multer';
 
 const teamRouter = Router();
 
@@ -23,11 +24,12 @@ defineRoutes(teamRouter, [
   {
     method: 'post',
     path: '/create',
-    // middlewares: [
-    //   authMiddleware.requireAuth(),
-    //   authMiddleware.requireAdmin,
-    //   validateRequest(teamSchema.createTeam),
-    // ],
+    middlewares: [
+      authMiddleware.requireAuth(),
+      authMiddleware.requireAdmin,
+      upload.single('image'), // Processes the file field from FormData
+      validateRequest(teamSchema.createTeam),
+    ],
     handler: teamController.createTeam,
   },
   {
@@ -37,6 +39,7 @@ defineRoutes(teamRouter, [
       validateRequest(commonSchema.idSchema),
       authMiddleware.requireAuth(),
       authMiddleware.requireAdmin,
+      upload.single('image'), // Processes new image if uploaded
       validateRequest(teamSchema.updateTeam),
     ],
     handler: teamController.updateTeam,

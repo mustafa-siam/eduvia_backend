@@ -3,8 +3,12 @@ import { IBlog } from './blog.schema';
 
 const blogSchema = new Schema<IBlog & Document>(
   {
-    // unique: true already creates an index, so we don't need the extra line below
-    slug: { type: String, required: true, unique: true, trim: true },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
     title: { type: String, required: true, trim: true },
     excerpt: { type: String, required: true, trim: true },
     cover: { type: String, required: true, trim: true },
@@ -15,11 +19,12 @@ const blogSchema = new Schema<IBlog & Document>(
     readTime: { type: String, required: true, trim: true },
     content: { type: String, required: true },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
-
-// REMOVED: blogSchema.index({ slug: 1 }, { unique: true });
-// This line was causing the "Duplicate schema index" warning.
 
 const BlogModel = model<IBlog & Document>('Blog', blogSchema);
 export default BlogModel;

@@ -6,6 +6,7 @@ export interface IContact extends Document {
   phone: string;
   destination: string;
   status: 'pending' | 'contacted' | 'resolved';
+  pinned: boolean; // ⭐ added
 }
 
 const contactSchema = new Schema<IContact>(
@@ -18,6 +19,10 @@ const contactSchema = new Schema<IContact>(
       type: String,
       enum: ['pending', 'contacted', 'resolved'],
       default: 'pending',
+    },
+    pinned: {
+      type: Boolean,
+      default: false, // ⭐ default
     },
   },
   { timestamps: true }

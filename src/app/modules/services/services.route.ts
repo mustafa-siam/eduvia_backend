@@ -1,8 +1,7 @@
 import { Router } from 'express';
 import { serviceController } from './services.controller';
-import validateRequest from '@/app/middlewares/validateRequest';
-import { serviceSchema } from './services.schema';
 import { defineRoutes } from '@/utils/defineRoutes';
+import { upload } from '@/utils/multer';
 
 const serviceRouter = Router();
 
@@ -20,15 +19,15 @@ defineRoutes(serviceRouter, [
   {
     method: 'post',
     path: '/create',
-    // middlewares: [
-    //   validateRequest(serviceSchema.createService),
-    // ],
+    middlewares: [
+      upload.single('image'), // Processes the multipart/form-data
+    ],
     handler: serviceController.createService,
   },
   {
     method: 'patch',
     path: '/:id',
-    middlewares: [validateRequest(serviceSchema.updateService)],
+    middlewares: [upload.single('image')],
     handler: serviceController.updateService,
   },
   {

@@ -13,9 +13,13 @@ const updateStatusSchema = z.object({
   }),
 });
 
+/* OPTIONAL (not used now, but future-safe) */
+const togglePinSchema = z.object({});
+
 export const contactValidation = {
   createContact: z.object({
     body: contactBodySchema,
   }),
   updateStatus: updateStatusSchema,
+  togglePin: togglePinSchema,
 };

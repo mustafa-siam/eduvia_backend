@@ -5,6 +5,7 @@ import { blogSchema } from './blog.schema';
 import { defineRoutes } from '@/utils/defineRoutes';
 import { authMiddleware } from '../auth/auth.middleware';
 import { commonSchema } from '@/app/schema/common.schema';
+import { upload } from '@/utils/multer';
 
 const blogRouter = Router();
 
@@ -35,6 +36,7 @@ defineRoutes(blogRouter, [
     middlewares: [
       authMiddleware.requireAuth(),
       authMiddleware.requireAdmin,
+      upload.single('image'), // Must match the key 'image' sent from frontend FormData
       validateRequest(blogSchema.createBlog),
     ],
     handler: blogController.createBlog,
@@ -43,9 +45,10 @@ defineRoutes(blogRouter, [
     method: 'patch',
     path: '/:id',
     middlewares: [
-      validateRequest(commonSchema.idSchema),
       authMiddleware.requireAuth(),
       authMiddleware.requireAdmin,
+      upload.single('image'), // Allows optional image update
+      validateRequest(commonSchema.idSchema),
       validateRequest(blogSchema.updateBlog),
     ],
     handler: blogController.updateBlog,

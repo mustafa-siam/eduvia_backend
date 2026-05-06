@@ -8,8 +8,10 @@ const socialSchema = z.object({
 const teamBodySchema = z.object({
   name: z.string({ required_error: 'Name is required' }).min(1),
   role: z.string({ required_error: 'Role is required' }).min(1),
-  image: z.string({ required_error: 'Image is required' }).min(1),
-  socials: z.array(socialSchema).optional(),
+  // Image is validated as optional string because the controller will
+  // inject the URL after uploading the file to Cloudinary/S3
+  image: z.string().optional(),
+  socials: z.union([z.string(), z.array(socialSchema)]).optional(),
 });
 
 const createTeam = z.object({

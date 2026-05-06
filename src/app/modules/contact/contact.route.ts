@@ -21,6 +21,9 @@ router.patch(
   ContactControllers.updateContactStatus
 );
 
+/* ⭐ PIN TOGGLE */
+router.patch('/:id/pin', ContactControllers.togglePin);
+
 router.delete('/:id', ContactControllers.deleteContact);
 
 export const ContactRoutes = router;
