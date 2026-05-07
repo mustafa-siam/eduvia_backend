@@ -17,6 +17,23 @@ defineRoutes(blogRouter, [
   },
   {
     method: 'get',
+    path: '/trash',
+    middlewares: [authMiddleware.requireAuth(), authMiddleware.requireAdmin],
+    handler: blogController.getTrashedBlogs,
+  },
+  {
+    method: 'post',
+    path: '/create',
+    middlewares: [
+      authMiddleware.requireAuth(),
+      authMiddleware.requireAdmin,
+      upload.single('cover'),
+      validateRequest(blogSchema.createBlog),
+    ],
+    handler: blogController.createBlog,
+  },
+  {
+    method: 'get',
     path: '/id/:id',
     middlewares: [
       validateRequest(commonSchema.idSchema),
@@ -26,20 +43,24 @@ defineRoutes(blogRouter, [
     handler: blogController.getBlogById,
   },
   {
-    method: 'get',
-    path: '/:slug',
-    handler: blogController.getBlogBySlug,
-  },
-  {
-    method: 'post',
-    path: '/create',
+    method: 'patch',
+    path: '/:id/restore',
     middlewares: [
+      validateRequest(commonSchema.idSchema),
       authMiddleware.requireAuth(),
       authMiddleware.requireAdmin,
-      upload.single('image'), // Must match the key 'image' sent from frontend FormData
-      validateRequest(blogSchema.createBlog),
     ],
-    handler: blogController.createBlog,
+    handler: blogController.restoreBlog,
+  },
+  {
+    method: 'delete',
+    path: '/:id/permanent',
+    middlewares: [
+      validateRequest(commonSchema.idSchema),
+      authMiddleware.requireAuth(),
+      authMiddleware.requireAdmin,
+    ],
+    handler: blogController.permanentDeleteBlog,
   },
   {
     method: 'patch',
@@ -47,7 +68,7 @@ defineRoutes(blogRouter, [
     middlewares: [
       authMiddleware.requireAuth(),
       authMiddleware.requireAdmin,
-      upload.single('image'), // Allows optional image update
+      upload.single('cover'),
       validateRequest(commonSchema.idSchema),
       validateRequest(blogSchema.updateBlog),
     ],
@@ -62,6 +83,11 @@ defineRoutes(blogRouter, [
       authMiddleware.requireAdmin,
     ],
     handler: blogController.deleteBlog,
+  },
+  {
+    method: 'get',
+    path: '/:slug',
+    handler: blogController.getBlogBySlug,
   },
 ]);
 

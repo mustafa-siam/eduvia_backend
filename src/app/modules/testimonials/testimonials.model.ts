@@ -12,4 +12,5 @@ const testimonialSchema = new Schema<ITestimonial & Document>(
 );
 
 const TestimonialModel = model<ITestimonial & Document>('Testimonial', testimonialSchema);
+
 export default TestimonialModel;
