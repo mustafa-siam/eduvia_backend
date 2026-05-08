@@ -3,10 +3,10 @@
     "target": "es2016",
     "lib": ["ES6"],
     "module": "commonjs",
-    "rootDir": "./src",
-    "baseUrl": "./",
+    "rootDir": "./",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
     "typeRoots": ["./src/types", "./src/types/express", "./node_modules/@types"],
     "types": ["node", "express"],
@@ -26,6 +26,6 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "src/types/**/*.d.ts", "src/types/**/*.d.ts"],
+  "include": ["src/**/*.ts", "src/types/**/*.d.ts", "src/types/**/*.d.ts", "index.ts"],
   "exclude": ["node_modules"]
 }

@@ -1,7 +1,7 @@
 import http from 'http';
-import app from './app';
-import dbConnection from './config/db';
-import { config } from './config/env';
+import app from './src/app';
+import dbConnection from './src/config/db';
+import { config } from './src/config/env';
 const PORT = process.env.PORT || 4000;
 const server = http.createServer(app);
 const main = async () => {
