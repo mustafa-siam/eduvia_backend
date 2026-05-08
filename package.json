@@ -8,8 +8,18 @@
     "@clerk/express": "^1.7.42",
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.2",
+    "@types/geoip-lite": "^1.4.4",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/morgan": "^1.9.9",
+    "@types/ms": "^2.1.0",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^22.15.30",
     "@types/nodemailer": "^6.4.17",
+    "@types/ua-parser-js": "^0.7.39",
+    "@types/useragent": "^2.3.4",
     "add": "^2.0.6",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.8.0",
@@ -37,7 +47,9 @@
     "uuid": "^13.0.0",
     "xlsx": "^0.18.5",
     "yarn": "^1.22.22",
-    "zod": "^3.25.55"
+    "zod": "^3.25.55",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
@@ -56,16 +68,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
-    "@types/cookie-parser": "^1.4.8",
-    "@types/cors": "^2.8.18",
-    "@types/express": "^5.0.2",
-    "@types/geoip-lite": "^1.4.4",
-    "@types/morgan": "^1.9.9",
-    "@types/ms": "^2.1.0",
-    "@types/multer": "^2.0.0",
-    "@types/node": "^22.15.30",
-    "@types/ua-parser-js": "^0.7.39",
-    "@types/useragent": "^2.3.4",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.1",
@@ -74,9 +76,7 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.5.3",
     "ts-node-dev": "^2.0.0",
-    "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.1"
   }
 }
