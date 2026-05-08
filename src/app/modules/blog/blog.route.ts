@@ -5,6 +5,7 @@ import { blogSchema } from './blog.schema';
 import { defineRoutes } from '@/utils/defineRoutes';
 import { authMiddleware } from '../auth/auth.middleware';
 import { commonSchema } from '@/app/schema/common.schema';
+import { upload } from '@/utils/multer';
 
 const blogRouter = Router();
 
@@ -13,6 +14,23 @@ defineRoutes(blogRouter, [
     method: 'get',
     path: '/',
     handler: blogController.getAllBlogs,
+  },
+  {
+    method: 'get',
+    path: '/trash',
+    middlewares: [authMiddleware.requireAuth(), authMiddleware.requireAdmin],
+    handler: blogController.getTrashedBlogs,
+  },
+  {
+    method: 'post',
+    path: '/create',
+    middlewares: [
+      authMiddleware.requireAuth(),
+      authMiddleware.requireAdmin,
+      upload.single('cover'),
+      validateRequest(blogSchema.createBlog),
+    ],
+    handler: blogController.createBlog,
   },
   {
     method: 'get',
@@ -25,27 +43,33 @@ defineRoutes(blogRouter, [
     handler: blogController.getBlogById,
   },
   {
-    method: 'get',
-    path: '/:slug',
-    handler: blogController.getBlogBySlug,
-  },
-  {
-    method: 'post',
-    path: '/create',
+    method: 'patch',
+    path: '/:id/restore',
     middlewares: [
+      validateRequest(commonSchema.idSchema),
       authMiddleware.requireAuth(),
       authMiddleware.requireAdmin,
-      validateRequest(blogSchema.createBlog),
     ],
-    handler: blogController.createBlog,
+    handler: blogController.restoreBlog,
+  },
+  {
+    method: 'delete',
+    path: '/:id/permanent',
+    middlewares: [
+      validateRequest(commonSchema.idSchema),
+      authMiddleware.requireAuth(),
+      authMiddleware.requireAdmin,
+    ],
+    handler: blogController.permanentDeleteBlog,
   },
   {
     method: 'patch',
     path: '/:id',
     middlewares: [
-      validateRequest(commonSchema.idSchema),
       authMiddleware.requireAuth(),
       authMiddleware.requireAdmin,
+      upload.single('cover'),
+      validateRequest(commonSchema.idSchema),
       validateRequest(blogSchema.updateBlog),
     ],
     handler: blogController.updateBlog,
@@ -59,6 +83,11 @@ defineRoutes(blogRouter, [
       authMiddleware.requireAdmin,
     ],
     handler: blogController.deleteBlog,
+  },
+  {
+    method: 'get',
+    path: '/:slug',
+    handler: blogController.getBlogBySlug,
   },
 ]);
 

@@ -1,18 +1,27 @@
 import { z } from 'zod';
 
-const createServices = z.object({
-  body: z.object({
-    name: z.string({ required_error: 'Services name is required' }),
-  }),
+const serviceBodySchema = z.object({
+  slug: z.string().min(1, 'Slug is required'),
+  title: z.string().min(1, 'Title is required'),
+  desc: z.string().min(1, 'Description is required'),
+  // FIX 1: Change array to string to match Mongoose & Rich Text Editor
+  content: z.string().optional(),
+  // FIX 2: Make image optional in Zod because Multer handles the file separately
+  // We will manually check for the file in the controller
+  image: z.string().optional(),
 });
 
-// Add other schemas here as needed
-// export const updateServices = z.object({...});
+const createService = z.object({
+  body: serviceBodySchema,
+});
 
-export const servicesSchema = {
-  createServices,
-  // updateServices,
+const updateService = z.object({
+  body: serviceBodySchema.partial(),
+});
+
+export const serviceSchema = {
+  createService,
+  updateService,
 };
 
-// Type export for mongoose schema
-export type IServices = z.infer<typeof createServices>['body'];
+export type IService = z.infer<typeof serviceBodySchema>;

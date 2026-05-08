@@ -1,12 +1,24 @@
 import { Schema, model, Document } from 'mongoose';
-import { IServices } from './services.schema';
 
-const servicesSchema = new Schema<IServices & Document>(
+export interface IService extends Document {
+  slug: string;
+  title: string;
+  desc: string; // HTML String
+  image: string;
+  content: string; // Changed from string[] to string
+}
+
+const serviceSchema = new Schema<IService>(
   {
-    name: { type: String, required: true },
+    slug: { type: String, required: true, unique: true, trim: true },
+    title: { type: String, required: true, trim: true },
+    desc: { type: String, required: true, trim: true },
+    image: { type: String, required: true },
+    // Changed to a single string to store full HTML
+    content: { type: String, default: '' },
   },
   { timestamps: true }
 );
 
-const ServicesModel = model<IServices & Document>('Services', servicesSchema);
-export default ServicesModel;
+const ServiceModel = model<IService>('Service', serviceSchema);
+export default ServiceModel;

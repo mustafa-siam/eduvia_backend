@@ -1,19 +1,40 @@
 import { Router } from 'express';
-import { servicesController } from './services.controller';
-import validateRequest from '@/app/middlewares/validateRequest';
-import { servicesSchema } from './services.schema';
+import { serviceController } from './services.controller';
 import { defineRoutes } from '@/utils/defineRoutes';
+import { upload } from '@/utils/multer';
 
-const servicesRouter = Router();
+const serviceRouter = Router();
 
-defineRoutes(servicesRouter, [
+defineRoutes(serviceRouter, [
+  {
+    method: 'get',
+    path: '/',
+    handler: serviceController.getAllServices,
+  },
+  {
+    method: 'get',
+    path: '/:id',
+    handler: serviceController.getServiceById,
+  },
   {
     method: 'post',
     path: '/create',
-    middlewares: [validateRequest(servicesSchema.createServices)],
-    handler: servicesController.servicesHandler,
+    middlewares: [
+      upload.single('image'), // Processes the multipart/form-data
+    ],
+    handler: serviceController.createService,
   },
-  // add other routes as needed
+  {
+    method: 'patch',
+    path: '/:id',
+    middlewares: [upload.single('image')],
+    handler: serviceController.updateService,
+  },
+  {
+    method: 'delete',
+    path: '/:id',
+    handler: serviceController.deleteService,
+  },
 ]);
 
-export default servicesRouter;
+export default serviceRouter;

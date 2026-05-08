@@ -1,18 +1,30 @@
 import { z } from 'zod';
 
-const createTeam = z.object({
-  body: z.object({
-    name: z.string({ required_error: 'Team name is required' }),
-  }),
+const socialSchema = z.object({
+  platform: z.string({ required_error: 'Platform is required' }),
+  url: z.string({ required_error: 'URL is required' }).url(),
 });
 
-// Add other schemas here as needed
-// export const updateTeam = z.object({...});
+const teamBodySchema = z.object({
+  name: z.string({ required_error: 'Name is required' }).min(1),
+  role: z.string({ required_error: 'Role is required' }).min(1),
+  // Image is validated as optional string because the controller will
+  // inject the URL after uploading the file to Cloudinary/S3
+  image: z.string().optional(),
+  socials: z.union([z.string(), z.array(socialSchema)]).optional(),
+});
+
+const createTeam = z.object({
+  body: teamBodySchema,
+});
+
+const updateTeam = z.object({
+  body: teamBodySchema.partial(),
+});
 
 export const teamSchema = {
   createTeam,
-  // updateTeam,
+  updateTeam,
 };
 
-// Type export for mongoose schema
-export type ITeam = z.infer<typeof createTeam>['body'];
+export type ITeam = z.infer<typeof teamBodySchema>;

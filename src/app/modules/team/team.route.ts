@@ -3,17 +3,57 @@ import { teamController } from './team.controller';
 import validateRequest from '@/app/middlewares/validateRequest';
 import { teamSchema } from './team.schema';
 import { defineRoutes } from '@/utils/defineRoutes';
+import { authMiddleware } from '../auth/auth.middleware';
+import { commonSchema } from '@/app/schema/common.schema';
+import { upload } from '@/utils/multer';
 
 const teamRouter = Router();
 
 defineRoutes(teamRouter, [
   {
+    method: 'get',
+    path: '/',
+    handler: teamController.getAllTeams,
+  },
+  {
+    method: 'get',
+    path: '/:id',
+    middlewares: [validateRequest(commonSchema.idSchema)],
+    handler: teamController.getTeamById,
+  },
+  {
     method: 'post',
     path: '/create',
-    middlewares: [validateRequest(teamSchema.createTeam)],
-    handler: teamController.teamHandler,
+    middlewares: [
+      authMiddleware.requireAuth(),
+      authMiddleware.requireAdmin,
+      upload.single('image'), // Processes the file field from FormData
+      validateRequest(teamSchema.createTeam),
+    ],
+    handler: teamController.createTeam,
   },
-  // add other routes as needed
+  {
+    method: 'patch',
+    path: '/:id',
+    middlewares: [
+      validateRequest(commonSchema.idSchema),
+      authMiddleware.requireAuth(),
+      authMiddleware.requireAdmin,
+      upload.single('image'), // Processes new image if uploaded
+      validateRequest(teamSchema.updateTeam),
+    ],
+    handler: teamController.updateTeam,
+  },
+  {
+    method: 'delete',
+    path: '/:id',
+    middlewares: [
+      validateRequest(commonSchema.idSchema),
+      authMiddleware.requireAuth(),
+      authMiddleware.requireAdmin,
+    ],
+    handler: teamController.deleteTeam,
+  },
 ]);
 
 export default teamRouter;
