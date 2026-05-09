@@ -138,6 +138,11 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
 
+      - name: Install dependencies
+        env:
+          HUSKY: '0'
+        run: pnpm install --frozen-lockfile
+
       - name: Vercel pull (production)
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
