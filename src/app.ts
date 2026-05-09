@@ -44,10 +44,8 @@ app.get('/', (_req, res) => {
 });
 app.use('/api/v1', router);
 
-// Catch-all route for handling 404 Not Found
 app.use(notFoundHandler);
 
-// Error Handling Middleware
 app.use(errorHandler);
 
 export default app;
