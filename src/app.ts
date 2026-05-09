@@ -31,6 +31,8 @@ app.use(
   })
 );
 
+// Health check endpoint
+
 app.get('/', (_req, res) => {
   res.json({
     message: 'Welcome to the API',
