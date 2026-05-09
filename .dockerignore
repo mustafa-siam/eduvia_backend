@@ -1,4 +1,15 @@
 node_modules
+dist
+.git
+.gitignore
+.env
+.vscode
+npm-debug.log
+yarn-error.log
+pnpm-store
+coverage
+*.log
+node_modules
 pnpm-store
 .pnpm-store
 npm-debug.log*
