@@ -1,15 +1,16 @@
 {
   "version": 2,
+  "buildCommand": "pnpm install && pnpm build",
   "builds": [
     {
-      "src": "src/app.ts",
+      "src": "dist/src/app.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/src/app.ts",
+      "dest": "/dist/src/app.js",
       "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
     }
   ]
