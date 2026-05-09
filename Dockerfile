@@ -25,7 +25,8 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh
-COPY --from=builder /app/.env.example ./
+# Copy .env.example from source so entrypoint can generate .env from env vars
+COPY .env.example ./
 
 EXPOSE 5000
 ENTRYPOINT ["/app/docker-entrypoint.sh"]

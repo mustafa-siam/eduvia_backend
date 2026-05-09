@@ -23,7 +23,6 @@ dist
 .github
 
 .env
-.env.*
 
 coverage
 .DS_Store
