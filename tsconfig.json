@@ -12,7 +12,6 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "typeRoots": ["./node_modules/@types"],
-    "ignoreDeprecations": "6.0",
 
     "allowJs": true,
     "outDir": "./dist",
