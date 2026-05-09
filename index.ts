@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import http from 'http';
 import app from './src/app';
 import dbConnection from './src/config/db';
