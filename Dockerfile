@@ -6,7 +6,9 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Install dependencies (including devDependencies) and build
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod=false
+# Install without running package build scripts to avoid interactive approval in CI/Docker
+# This avoids the `pnpm approve-builds` prompt which fails non-interactively.
+RUN pnpm install --frozen-lockfile --prod=false --ignore-scripts
 COPY . ./
 RUN pnpm run build
 
