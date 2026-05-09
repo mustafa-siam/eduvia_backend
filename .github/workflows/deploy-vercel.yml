@@ -116,6 +116,7 @@ jobs:
         with:
           name: vercel-prebuilt
           path: .vercel/output
+          include-hidden-files: true
           if-no-files-found: error
 
   deploy:
@@ -149,6 +150,11 @@ jobs:
         with:
           name: vercel-prebuilt
           path: .vercel/output
+
+      - name: Verify prebuilt output
+        run: |
+          test -f .vercel/output/config.json
+          find .vercel/output/functions -name '.vc-config.json' -print -quit | grep -q .
 
       - name: Deploy to Vercel (prebuilt)
         env:
