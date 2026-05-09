@@ -3,48 +3,49 @@ import dotenv from 'dotenv';
 import { z } from 'zod';
 import path from 'path';
 
-// Load .env file
 const envPath = path.resolve(process.cwd(), '.env');
-if (!fs.existsSync(envPath)) {
+const hasLocalEnvFile = fs.existsSync(envPath);
+const isVercelRuntime = Boolean(process.env.VERCEL);
+
+if (hasLocalEnvFile) {
+  dotenv.config();
+} else if (!isVercelRuntime) {
   console.error('⚠️  .env file not found. Please create one based on .env.example');
   process.exit(1);
-} else {
-  dotenv.config();
 }
-
-// Compare .env with .env.example
-const envFile = fs.readFileSync(envPath, 'utf8');
-const envLines = envFile
-  .split('\n')
-  .filter((line) => line && !line.startsWith('#'))
-  .map((line) => line.split('=')[0].trim());
 
 const examplePath = path.resolve(process.cwd(), '.env.example');
-const exampleKeys = fs.existsSync(examplePath)
-  ? fs
-      .readFileSync(examplePath, 'utf8')
-      .split('\n')
-      .filter((line) => line && !line.startsWith('#'))
-      .map((line) => line.split('=')[0].trim())
-  : [];
+if (hasLocalEnvFile && fs.existsSync(examplePath)) {
+  const envFile = fs.readFileSync(envPath, 'utf8');
+  const envLines = envFile
+    .split('\n')
+    .filter((line) => line && !line.startsWith('#'))
+    .map((line) => line.split('=')[0].trim());
 
-const missingKeys = exampleKeys.filter((key) => !envLines.includes(key));
-if (missingKeys.length > 0) {
-  console.error(
-    `⚠️  Missing environment variables from .env:\n   ${missingKeys.join(
-      ', '
-    )}\nPlease update your .env file to match .env.example`
-  );
-  process.exit(1);
-}
+  const exampleKeys = fs
+    .readFileSync(examplePath, 'utf8')
+    .split('\n')
+    .filter((line) => line && !line.startsWith('#'))
+    .map((line) => line.split('=')[0].trim());
 
-const extraKeys = envLines.filter((key) => !exampleKeys.includes(key));
-if (extraKeys.length > 0) {
-  console.warn(
-    `⚠️  Extra variables found in .env (not in .env.example):\n   ${extraKeys.join(
-      ', '
-    )}\nThese will be ignored.`
-  );
+  const missingKeys = exampleKeys.filter((key) => !envLines.includes(key));
+  if (missingKeys.length > 0) {
+    console.error(
+      `⚠️  Missing environment variables from .env:\n   ${missingKeys.join(
+        ', '
+      )}\nPlease update your .env file to match .env.example`
+    );
+    process.exit(1);
+  }
+
+  const extraKeys = envLines.filter((key) => !exampleKeys.includes(key));
+  if (extraKeys.length > 0) {
+    console.warn(
+      `⚠️  Extra variables found in .env (not in .env.example):\n   ${extraKeys.join(
+        ', '
+      )}\nThese will be ignored.`
+    );
+  }
 }
 
 // Zod schema for validation
