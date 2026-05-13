@@ -6,6 +6,7 @@ import teamRouter from '../modules/team/team.route';
 import serviceRouter from '../modules/services/services.route';
 import testimonialRouter from '../modules/testimonials/testimonials.route';
 import { ContactRoutes } from '../modules/contact/contact.route';
+import faqRouter from '../modules/faq/faq.route';
 
 const router = Router();
 
@@ -37,6 +38,10 @@ const routes = [
   {
     path: '/contacts',
     router: ContactRoutes,
+  },
+  {
+    path: '/faqs',
+    router: faqRouter,
   },
 ];
 
