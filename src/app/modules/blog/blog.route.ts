@@ -10,17 +10,28 @@ import { upload } from '@/utils/multer';
 const blogRouter = Router();
 
 defineRoutes(blogRouter, [
+  /* =====================================================
+     PUBLIC ROUTES
+  ===================================================== */
+
   {
     method: 'get',
     path: '/',
     handler: blogController.getAllBlogs,
   },
+
+  /* =====================================================
+     ADMIN ROUTES — must come BEFORE /:slug to avoid
+     Express matching "trash" or "create" as a slug
+  ===================================================== */
+
   {
     method: 'get',
     path: '/trash',
     middlewares: [authMiddleware.requireAuth(), authMiddleware.requireAdmin],
     handler: blogController.getTrashedBlogs,
   },
+
   {
     method: 'post',
     path: '/create',
@@ -32,39 +43,47 @@ defineRoutes(blogRouter, [
     ],
     handler: blogController.createBlog,
   },
+
+  /* =====================================================
+     LIKE (USER AUTH REQUIRED)
+     Must be before /:slug so Express doesn't swallow it
+  ===================================================== */
+
+  {
+    method: 'patch',
+    path: '/:slug/like',
+    middlewares: [authMiddleware.requireAuth()],
+    handler: blogController.likeBlog,
+  },
+
+  /* =====================================================
+     PUBLIC SLUG ROUTE — after all static paths
+  ===================================================== */
+
+  {
+    method: 'get',
+    path: '/:slug',
+    handler: blogController.getBlogBySlug,
+  },
+
+  /* =====================================================
+     ADMIN ID-BASED ROUTES
+  ===================================================== */
+
   {
     method: 'get',
     path: '/id/:id',
     middlewares: [
-      validateRequest(commonSchema.idSchema),
       authMiddleware.requireAuth(),
       authMiddleware.requireAdmin,
+      validateRequest(commonSchema.idSchema),
     ],
     handler: blogController.getBlogById,
   },
+
   {
     method: 'patch',
-    path: '/:id/restore',
-    middlewares: [
-      validateRequest(commonSchema.idSchema),
-      authMiddleware.requireAuth(),
-      authMiddleware.requireAdmin,
-    ],
-    handler: blogController.restoreBlog,
-  },
-  {
-    method: 'delete',
-    path: '/:id/permanent',
-    middlewares: [
-      validateRequest(commonSchema.idSchema),
-      authMiddleware.requireAuth(),
-      authMiddleware.requireAdmin,
-    ],
-    handler: blogController.permanentDeleteBlog,
-  },
-  {
-    method: 'patch',
-    path: '/:id',
+    path: '/id/:id',
     middlewares: [
       authMiddleware.requireAuth(),
       authMiddleware.requireAdmin,
@@ -74,20 +93,38 @@ defineRoutes(blogRouter, [
     ],
     handler: blogController.updateBlog,
   },
+
   {
     method: 'delete',
-    path: '/:id',
+    path: '/id/:id',
     middlewares: [
-      validateRequest(commonSchema.idSchema),
       authMiddleware.requireAuth(),
       authMiddleware.requireAdmin,
+      validateRequest(commonSchema.idSchema),
     ],
     handler: blogController.deleteBlog,
   },
+
   {
-    method: 'get',
-    path: '/:slug',
-    handler: blogController.getBlogBySlug,
+    method: 'patch',
+    path: '/id/:id/restore',
+    middlewares: [
+      authMiddleware.requireAuth(),
+      authMiddleware.requireAdmin,
+      validateRequest(commonSchema.idSchema),
+    ],
+    handler: blogController.restoreBlog,
+  },
+
+  {
+    method: 'delete',
+    path: '/id/:id/permanent',
+    middlewares: [
+      authMiddleware.requireAuth(),
+      authMiddleware.requireAdmin,
+      validateRequest(commonSchema.idSchema),
+    ],
+    handler: blogController.permanentDeleteBlog,
   },
 ]);
 

@@ -4,21 +4,33 @@ import { StatusCodes } from 'http-status-codes';
 import { teamService } from './team.service';
 import { cloudinaryConfig } from '@/utils/uploadFile';
 
+const parseJSONIfString = (value: any) => {
+  if (typeof value === 'string') {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return value;
+    }
+  }
+  return value;
+};
+
 export const createTeam = catchAsync(async (req, res) => {
   const payload = { ...req.body };
 
-  // 1. Handle stringified socials from FormData
-  if (typeof payload.socials === 'string') {
-    payload.socials = JSON.parse(payload.socials);
-  }
+  // SOCIALS + EDUCATION + EXPERIENCE parsing
+  payload.socials = parseJSONIfString(payload.socials);
+  payload.education = parseJSONIfString(payload.education);
+  payload.experience = parseJSONIfString(payload.experience);
 
-  // 2. Handle Image Upload
+  // IMAGE upload
   if (req.file) {
     const uploadResult = await cloudinaryConfig.uploadFileToCloudinary(
       req.file.buffer,
       req.file.originalname,
       { folder: 'team' }
     );
+
     payload.image = uploadResult.secure_url;
   }
 
@@ -54,18 +66,19 @@ export const getTeamById = catchAsync(async (req, res) => {
 export const updateTeam = catchAsync(async (req, res) => {
   const payload = { ...req.body };
 
-  // 1. Handle stringified socials
-  if (typeof payload.socials === 'string') {
-    payload.socials = JSON.parse(payload.socials);
-  }
+  // SOCIALS + EDUCATION + EXPERIENCE parsing
+  payload.socials = parseJSONIfString(payload.socials);
+  payload.education = parseJSONIfString(payload.education);
+  payload.experience = parseJSONIfString(payload.experience);
 
-  // 2. Handle Image Update if a new file is provided
+  // IMAGE update
   if (req.file) {
     const uploadResult = await cloudinaryConfig.uploadFileToCloudinary(
       req.file.buffer,
       req.file.originalname,
       { folder: 'team' }
     );
+
     payload.image = uploadResult.secure_url;
   }
 

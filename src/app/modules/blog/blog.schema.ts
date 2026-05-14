@@ -10,8 +10,10 @@ const blogBodySchema = z.object({
   date: z.string().min(1, 'Blog publish date is required'),
   readTime: z.string().min(1, 'Blog read time is required'),
   content: z.string().min(1, 'Blog content is required'),
-  // Cover is handled via file upload, so it's optional in the initial validation
   cover: z.string().optional(),
+  likes: z.number().int().nonnegative().default(0),
+
+  likedBy: z.array(z.string()).default([]),
 });
 
 const createBlog = z.object({
