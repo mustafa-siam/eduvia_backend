@@ -22,7 +22,7 @@ export const createTeam = catchAsync(async (req, res) => {
   payload.socials = parseJSONIfString(payload.socials);
   payload.education = parseJSONIfString(payload.education);
   payload.experience = parseJSONIfString(payload.experience);
-
+  payload.details = parseJSONIfString(payload.details);
   // IMAGE upload
   if (req.file) {
     const uploadResult = await cloudinaryConfig.uploadFileToCloudinary(
@@ -65,12 +65,10 @@ export const getTeamById = catchAsync(async (req, res) => {
 
 export const updateTeam = catchAsync(async (req, res) => {
   const payload = { ...req.body };
-
-  // SOCIALS + EDUCATION + EXPERIENCE parsing
   payload.socials = parseJSONIfString(payload.socials);
   payload.education = parseJSONIfString(payload.education);
   payload.experience = parseJSONIfString(payload.experience);
-
+  payload.details = parseJSONIfString(payload.details);
   // IMAGE update
   if (req.file) {
     const uploadResult = await cloudinaryConfig.uploadFileToCloudinary(

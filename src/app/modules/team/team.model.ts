@@ -3,8 +3,8 @@ import { ITeam } from './team.schema';
 
 const socialSchema = new Schema(
   {
-    platform: { type: String, required: true },
-    url: { type: String, required: true },
+    platform: { type: String, required: true, trim: true },
+    url: { type: String, required: true, trim: true },
   },
   { _id: false }
 );
@@ -26,15 +26,31 @@ const experienceSchema = new Schema(
 const teamSchema = new Schema<ITeam & Document>(
   {
     name: { type: String, required: true, trim: true },
+
     role: { type: String, required: true, trim: true },
 
     image: { type: String, required: true, trim: true },
 
-    socials: { type: [socialSchema], default: [] },
+    details: {
+      type: String,
+      trim: true,
+      default: '',
+    },
 
-    // NEW FIELDS
-    education: { type: [educationSchema], default: [] },
-    experience: { type: [experienceSchema], default: [] },
+    socials: {
+      type: [socialSchema],
+      default: [],
+    },
+
+    education: {
+      type: [educationSchema],
+      default: [],
+    },
+
+    experience: {
+      type: [experienceSchema],
+      default: [],
+    },
   },
   { timestamps: true }
 );
