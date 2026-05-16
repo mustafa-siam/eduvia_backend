@@ -3,7 +3,6 @@ import { blogService } from './blog.service';
 import { sendSuccessResponse } from '@/utils/response';
 import { StatusCodes } from 'http-status-codes';
 import { cloudinaryConfig } from '@/utils/uploadFile';
-import { getAuth } from '@clerk/express';
 import AppError from '@/app/errors/handlers/AppError';
 
 /* =========================================================
@@ -149,20 +148,25 @@ const permanentDeleteBlog = catchAsync(async (req, res) => {
 });
 
 /* =========================================================
-   LIKE / UNLIKE BLOG (CLERK AUTH FIXED)
+   LIKE / UNLIKE BLOG (ANONYMOUS DEVICE INTERACTION)
 ========================================================= */
 const likeBlog = catchAsync(async (req, res) => {
-  const { userId } = getAuth(req);
+  // 1. Destructure from req.body instead of reading Clerk tokens
+  const { slug, userId } = req.body;
 
-  if (!userId) {
-    throw new AppError('Unauthorized - No valid session', StatusCodes.UNAUTHORIZED);
+  if (!slug || !userId) {
+    throw new AppError(
+      'Bad Request - Missing slug or tracking device ID properties',
+      StatusCodes.BAD_REQUEST
+    );
   }
 
-  const data = await blogService.likeBlog(req.params.slug, userId);
+  // 2. Pass variables downstream to your business service layer
+  const data = await blogService.likeBlog(slug, userId);
 
   return sendSuccessResponse(res, {
     statusCode: StatusCodes.OK,
-    message: 'Blog like updated successfully',
+    message: 'Blog reaction status synchronized successfully',
     data,
   });
 });

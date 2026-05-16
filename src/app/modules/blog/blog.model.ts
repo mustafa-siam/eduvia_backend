@@ -10,74 +10,59 @@ const blogSchema = new Schema<IBlog & Document>(
       trim: true,
       index: true,
     },
-
     title: {
       type: String,
       required: true,
       trim: true,
     },
-
     excerpt: {
       type: String,
       required: true,
       trim: true,
     },
-
     cover: {
       type: String,
       required: true,
       trim: true,
     },
-
     category: {
       type: String,
       required: true,
       trim: true,
       index: true,
     },
-
     author: {
       type: String,
       required: true,
       trim: true,
     },
-
     authorRole: {
       type: String,
       required: true,
       trim: true,
     },
-
     date: {
       type: String,
       required: true,
       trim: true,
     },
-
     readTime: {
       type: String,
       required: true,
       trim: true,
     },
-
     content: {
       type: String,
       required: true,
     },
-
-    /* =====================================================
-       🔥 LIKE SYSTEM (PRODUCTION READY)
-    ===================================================== */
-
     likes: {
       type: Number,
       default: 0,
       min: 0,
       index: true,
     },
-
     likedBy: {
-      type: [String], // userId / clerkId
+      type: [String], // Stores anonymous generated device IDs securely
       default: [],
     },
   },
@@ -89,7 +74,7 @@ const blogSchema = new Schema<IBlog & Document>(
 );
 
 /* =====================================================
-   OPTIONAL: HELPFUL INDEX (PERFORMANCE BOOST)
+    DATABASE INDEX OPTIMIZATIONS
 ===================================================== */
 blogSchema.index({ slug: 1 });
 blogSchema.index({ createdAt: -1 });

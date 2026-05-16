@@ -131,22 +131,25 @@ const likeBlog = async (slug: string, userId: string) => {
     throw new AppError('Blog not found', StatusCodes.NOT_FOUND);
   }
 
-  // normalize arrays
+  // Normalize arrays and counts defensively
   blog.likedBy = blog.likedBy ?? [];
   blog.likes = blog.likes ?? 0;
 
   const alreadyLiked = blog.likedBy.includes(userId);
 
   if (alreadyLiked) {
+    // Unlike Action: Filter out the unique anonymous ID string
     blog.likedBy = blog.likedBy.filter((id) => id !== userId);
     blog.likes = Math.max(0, blog.likes - 1);
   } else {
+    // Like Action: Register the anonymous ID string to track status
     blog.likedBy.push(userId);
     blog.likes += 1;
   }
 
   await blog.save();
 
+  // Return formatted JavaScript plain data structure back to controller
   return blog.toObject();
 };
 

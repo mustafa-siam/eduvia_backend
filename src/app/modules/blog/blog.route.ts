@@ -45,14 +45,16 @@ defineRoutes(blogRouter, [
   },
 
   /* =====================================================
-     LIKE (USER AUTH REQUIRED)
-     Must be before /:slug so Express doesn't swallow it
+     🆕 LIKE / UNLIKE (ANONYMOUS & PUBLIC)
+     Kept before /:slug so Express doesn't treat 'like' as a slug parameter
   ===================================================== */
 
   {
     method: 'patch',
-    path: '/:slug/like',
-    middlewares: [authMiddleware.requireAuth()],
+    path: '/like',
+    middlewares: [
+      validateRequest(blogSchema.toggleLikeSchema), // Ensures payload contains valid slug and userId
+    ],
     handler: blogController.likeBlog,
   },
 
