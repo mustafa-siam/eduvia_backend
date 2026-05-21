@@ -1,8 +1,17 @@
 import { z } from 'zod';
 
+const localizedStringSchema = z.object({
+  en: z
+    .string({ required_error: 'English content is required' })
+    .min(1, 'English content cannot be empty'),
+  bn: z
+    .string({ required_error: 'Bangla content is required' })
+    .min(1, 'Bangla content cannot be empty'),
+});
+
 const faqBodySchema = z.object({
-  question: z.string({ required_error: 'Question is required' }).min(1),
-  answer: z.string({ required_error: 'Answer is required' }).min(1),
+  question: localizedStringSchema,
+  answer: localizedStringSchema,
 });
 
 const createFaq = z.object({
@@ -10,7 +19,12 @@ const createFaq = z.object({
 });
 
 const updateFaq = z.object({
-  body: faqBodySchema.partial(),
+  body: z
+    .object({
+      question: localizedStringSchema.partial(),
+      answer: localizedStringSchema.partial(),
+    })
+    .partial(),
 });
 
 export const faqSchema = {

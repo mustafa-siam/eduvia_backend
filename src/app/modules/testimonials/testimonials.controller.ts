@@ -1,8 +1,37 @@
+// testimonials.controller.ts
 import { StatusCodes } from 'http-status-codes';
 import catchAsync from '@/utils/catchAsync';
 import { sendSuccessResponse } from '@/utils/response';
 import { testimonialService } from './testimonials.service';
 import { cloudinaryConfig } from '@/utils/uploadFile';
+
+/**
+ * Reusable utility to parse incoming multipart/form-data into deep language structures
+ */
+const parseMultipartPayload = (body: any) => {
+  const result = { ...body };
+
+  // If payload fields are parsed flat as strings (e.g., body['name[en]']), convert them to nested objects
+  if (body['name[en]'] || body['name[bn]']) {
+    result.name = {
+      en: body['name[en]'] || '',
+      bn: body['name[bn]'] || '',
+    };
+    delete result['name[en]'];
+    delete result['name[bn]'];
+  }
+
+  if (body['role[en]'] || body['role[bn]']) {
+    result.role = {
+      en: body['role[en]'] || '',
+      bn: body['role[bn]'] || '',
+    };
+    delete result['role[en]'];
+    delete result['role[bn]'];
+  }
+
+  return result;
+};
 
 export const createTestimonial = catchAsync(async (req, res) => {
   let imgUrl = '';
@@ -17,11 +46,16 @@ export const createTestimonial = catchAsync(async (req, res) => {
     imgUrl = uploadResult.secure_url;
   }
 
-  // 2. Combine file URL with text fields (youtubeLink will be saved as raw URL)
+  // 2. Parse flattened multipart keys safely into multilingual data structures
+  const parsedBody = parseMultipartPayload(req.body);
+
   const payload = {
-    ...req.body,
+    ...parsedBody,
     img: imgUrl,
   };
+
+  // Re-assign payload to req.body so validateRequest middleware reads the correct object layout
+  req.body = payload;
 
   const data = await testimonialService.createTestimonial(payload);
 
@@ -44,9 +78,10 @@ export const getAllTestimonials = catchAsync(async (_req, res) => {
 
 export const updateTestimonial = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const updateBody = { ...req.body };
 
-  // 1. If a new image was cropped and uploaded, get the new URL
+  const parsedBody = parseMultipartPayload(req.body);
+  const updateBody = { ...parsedBody };
+
   if (req.file) {
     const uploadResult = await cloudinaryConfig.uploadFileToCloudinary(
       req.file.buffer,

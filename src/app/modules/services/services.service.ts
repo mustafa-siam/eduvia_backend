@@ -1,7 +1,7 @@
 import AppError from '@/app/errors/handlers/AppError';
 import { StatusCodes } from 'http-status-codes';
 import ServiceModel from './services.model';
-import { IService } from './services.schema';
+import { IService } from './services.model'; // FIXED: Changed from .schema to .model
 
 const createService = async (payload: Partial<IService>) => {
   return await ServiceModel.create(payload);

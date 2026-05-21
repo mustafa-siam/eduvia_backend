@@ -1,7 +1,17 @@
 import { Schema, model, Document } from 'mongoose';
 import { IBlog } from './blog.schema';
 
-const blogSchema = new Schema<IBlog & Document>(
+type IBlogDocument = IBlog & { isDeleted?: boolean } & Document;
+
+const localizedStringSchema = new Schema(
+  {
+    en: { type: String, required: true, trim: true },
+    bn: { type: String, required: true, trim: true },
+  },
+  { _id: false }
+);
+
+const blogSchema = new Schema<IBlogDocument>(
   {
     slug: {
       type: String,
@@ -11,14 +21,12 @@ const blogSchema = new Schema<IBlog & Document>(
       index: true,
     },
     title: {
-      type: String,
+      type: localizedStringSchema,
       required: true,
-      trim: true,
     },
     excerpt: {
-      type: String,
+      type: localizedStringSchema,
       required: true,
-      trim: true,
     },
     cover: {
       type: String,
@@ -26,20 +34,16 @@ const blogSchema = new Schema<IBlog & Document>(
       trim: true,
     },
     category: {
-      type: String,
+      type: localizedStringSchema,
       required: true,
-      trim: true,
-      index: true,
     },
     author: {
-      type: String,
+      type: localizedStringSchema,
       required: true,
-      trim: true,
     },
     authorRole: {
-      type: String,
+      type: localizedStringSchema,
       required: true,
-      trim: true,
     },
     date: {
       type: String,
@@ -48,11 +52,11 @@ const blogSchema = new Schema<IBlog & Document>(
     },
     readTime: {
       type: String,
-      required: true,
       trim: true,
+      default: '',
     },
     content: {
-      type: String,
+      type: localizedStringSchema,
       required: true,
     },
     likes: {
@@ -62,8 +66,12 @@ const blogSchema = new Schema<IBlog & Document>(
       index: true,
     },
     likedBy: {
-      type: [String], // Stores anonymous generated device IDs securely
+      type: [String],
       default: [],
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -73,12 +81,9 @@ const blogSchema = new Schema<IBlog & Document>(
   }
 );
 
-/* =====================================================
-    DATABASE INDEX OPTIMIZATIONS
-===================================================== */
 blogSchema.index({ slug: 1 });
 blogSchema.index({ createdAt: -1 });
 
-const BlogModel = model<IBlog & Document>('Blog', blogSchema);
+const BlogModel = model<IBlogDocument>('Blog', blogSchema);
 
 export default BlogModel;

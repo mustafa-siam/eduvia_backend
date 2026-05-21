@@ -1,10 +1,18 @@
 import { z } from 'zod';
+const multiLangStringSchema = z.object({
+  en: z
+    .string({ required_error: 'English translation is required' })
+    .min(1, 'English text cannot be empty'),
+  bn: z
+    .string({ required_error: 'Bangla translation is required' })
+    .min(1, 'Bangla text cannot be empty'),
+});
 
 const testimonialBodySchema = z.object({
-  name: z.string({ required_error: 'Name is required' }).min(1),
-  role: z.string({ required_error: 'Role is required' }).min(1),
+  name: multiLangStringSchema,
+  role: multiLangStringSchema,
 
-  // now optional because image comes from file upload
+  // Optional because image path string generation comes from file buffer uploading upload hooks
   img: z.string().url().optional(),
 
   youtubeLink: z.string({ required_error: 'YouTube link is required' }).url(),
@@ -15,7 +23,13 @@ const createTestimonial = z.object({
 });
 
 const updateTestimonial = z.object({
-  body: testimonialBodySchema.partial(),
+  // Use deep partial variants so updating single locales works safely
+  body: z.object({
+    name: multiLangStringSchema.partial().optional(),
+    role: multiLangStringSchema.partial().optional(),
+    img: z.string().url().optional(),
+    youtubeLink: z.string().url().optional(),
+  }),
 });
 
 export const testimonialSchema = {

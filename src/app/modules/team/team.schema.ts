@@ -1,33 +1,44 @@
 import { z } from 'zod';
 
+const localizedStringSchema = z.object({
+  en: z.string({ required_error: 'English content is required' }).min(1),
+  bn: z.string({ required_error: 'Bangla content is required' }).min(1),
+});
+
 const socialSchema = z.object({
   platform: z.string({ required_error: 'Platform is required' }),
   url: z.string({ required_error: 'URL is required' }).url(),
 });
 
 const educationSchema = z.object({
-  title: z.string({ required_error: 'Education is required' }).min(1),
+  title: localizedStringSchema,
 });
 
 const experienceSchema = z.object({
-  title: z.string({ required_error: 'Experience is required' }).min(1),
+  title: localizedStringSchema,
 });
 
+// Structural preprocessor helper to cleanly parse incoming Multi-part FormData strings
+const preprocessJson = (schema: z.ZodTypeAny) =>
+  z.preprocess((val) => {
+    if (typeof val === 'string') {
+      try {
+        return JSON.parse(val);
+      } catch {
+        return val;
+      }
+    }
+    return val;
+  }, schema);
+
 const teamBodySchema = z.object({
-  name: z.string({ required_error: 'Name is required' }).min(1),
-
-  role: z.string({ required_error: 'Role is required' }).min(1),
-
+  name: preprocessJson(localizedStringSchema),
+  role: preprocessJson(localizedStringSchema),
+  details: preprocessJson(localizedStringSchema).optional(),
   image: z.string().optional(),
-
-  socials: z.union([z.string(), z.array(socialSchema)]).optional(),
-
-  education: z.union([z.string(), z.array(educationSchema)]).optional(),
-
-  experience: z.union([z.string(), z.array(experienceSchema)]).optional(),
-
-  // ✅ FIXED: now string only
-  details: z.string().optional(),
+  socials: preprocessJson(z.array(socialSchema)).optional().default([]),
+  education: preprocessJson(z.array(educationSchema)).optional().default([]),
+  experience: preprocessJson(z.array(experienceSchema)).optional().default([]),
 });
 
 const createTeam = z.object({
@@ -42,4 +53,5 @@ export const teamSchema = {
   createTeam,
   updateTeam,
 };
+
 export type ITeam = z.infer<typeof teamBodySchema>;

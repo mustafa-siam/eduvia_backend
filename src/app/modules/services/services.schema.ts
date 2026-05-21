@@ -1,13 +1,16 @@
 import { z } from 'zod';
 
+// Reusable schema for localized fields
+const localizedStringSchema = z.object({
+  en: z.string().min(1, 'English version is required'),
+  bn: z.string().min(1, 'Bengali version is required'),
+});
+
 const serviceBodySchema = z.object({
   slug: z.string().min(1, 'Slug is required'),
-  title: z.string().min(1, 'Title is required'),
-  desc: z.string().min(1, 'Description is required'),
-  // FIX 1: Change array to string to match Mongoose & Rich Text Editor
-  content: z.string().optional(),
-  // FIX 2: Make image optional in Zod because Multer handles the file separately
-  // We will manually check for the file in the controller
+  title: localizedStringSchema,
+  desc: localizedStringSchema,
+  content: localizedStringSchema,
   image: z.string().optional(),
 });
 
@@ -24,4 +27,4 @@ export const serviceSchema = {
   updateService,
 };
 
-export type IService = z.infer<typeof serviceBodySchema>;
+export type IServiceInput = z.infer<typeof serviceBodySchema>;

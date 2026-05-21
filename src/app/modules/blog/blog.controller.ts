@@ -5,9 +5,30 @@ import { StatusCodes } from 'http-status-codes';
 import { cloudinaryConfig } from '@/utils/uploadFile';
 import AppError from '@/app/errors/handlers/AppError';
 
-/* =========================================================
-   CREATE BLOG
-========================================================= */
+const parseLocalizedPayload = (body: any) => {
+  const payload = { ...body };
+
+  const localizedFields = ['title', 'excerpt', 'content', 'category', 'author', 'authorRole'];
+
+  for (const field of localizedFields) {
+    const value = payload[field];
+
+    if (typeof value === 'string' && (value.startsWith('{') || value.startsWith('['))) {
+      try {
+        payload[field] = JSON.parse(value);
+      } catch {}
+    } else if (!value) {
+      const en = body[`${field}.en`];
+      const bn = body[`${field}.bn`];
+      if (en !== undefined || bn !== undefined) {
+        payload[field] = { en: en || '', bn: bn || '' };
+      }
+    }
+  }
+
+  return payload;
+};
+
 const createBlog = catchAsync(async (req, res) => {
   let coverUrl = '';
 
@@ -20,8 +41,10 @@ const createBlog = catchAsync(async (req, res) => {
     coverUrl = uploadResult.secure_url;
   }
 
+  const normalizedBody = parseLocalizedPayload(req.body);
+
   const data = await blogService.createBlog({
-    ...req.body,
+    ...normalizedBody,
     cover: coverUrl,
   });
 
@@ -32,9 +55,6 @@ const createBlog = catchAsync(async (req, res) => {
   });
 });
 
-/* =========================================================
-   GET ALL BLOGS
-========================================================= */
 const getAllBlogs = catchAsync(async (_req, res) => {
   const data = await blogService.getAllBlogs();
 
@@ -45,9 +65,6 @@ const getAllBlogs = catchAsync(async (_req, res) => {
   });
 });
 
-/* =========================================================
-   GET TRASHED BLOGS
-========================================================= */
 const getTrashedBlogs = catchAsync(async (_req, res) => {
   const data = await blogService.getTrashedBlogs();
 
@@ -58,9 +75,6 @@ const getTrashedBlogs = catchAsync(async (_req, res) => {
   });
 });
 
-/* =========================================================
-   GET BLOG BY SLUG
-========================================================= */
 const getBlogBySlug = catchAsync(async (req, res) => {
   const data = await blogService.getBlogBySlug(req.params.slug);
 
@@ -71,9 +85,6 @@ const getBlogBySlug = catchAsync(async (req, res) => {
   });
 });
 
-/* =========================================================
-   GET BLOG BY ID
-========================================================= */
 const getBlogById = catchAsync(async (req, res) => {
   const data = await blogService.getBlogById(req.params.id);
 
@@ -84,11 +95,8 @@ const getBlogById = catchAsync(async (req, res) => {
   });
 });
 
-/* =========================================================
-   UPDATE BLOG
-========================================================= */
 const updateBlog = catchAsync(async (req, res) => {
-  const payload = { ...req.body };
+  const payload = parseLocalizedPayload(req.body);
 
   if (req.file) {
     const uploadResult = await cloudinaryConfig.uploadFileToCloudinary(
@@ -108,9 +116,6 @@ const updateBlog = catchAsync(async (req, res) => {
   });
 });
 
-/* =========================================================
-   DELETE BLOG (SOFT)
-========================================================= */
 const deleteBlog = catchAsync(async (req, res) => {
   const data = await blogService.deleteBlog(req.params.id);
 
@@ -121,9 +126,6 @@ const deleteBlog = catchAsync(async (req, res) => {
   });
 });
 
-/* =========================================================
-   RESTORE BLOG
-========================================================= */
 const restoreBlog = catchAsync(async (req, res) => {
   const data = await blogService.restoreBlog(req.params.id);
 
@@ -134,9 +136,6 @@ const restoreBlog = catchAsync(async (req, res) => {
   });
 });
 
-/* =========================================================
-   PERMANENT DELETE BLOG
-========================================================= */
 const permanentDeleteBlog = catchAsync(async (req, res) => {
   const data = await blogService.permanentDeleteBlog(req.params.id);
 
@@ -147,11 +146,7 @@ const permanentDeleteBlog = catchAsync(async (req, res) => {
   });
 });
 
-/* =========================================================
-   LIKE / UNLIKE BLOG (ANONYMOUS DEVICE INTERACTION)
-========================================================= */
 const likeBlog = catchAsync(async (req, res) => {
-  // 1. Destructure from req.body instead of reading Clerk tokens
   const { slug, userId } = req.body;
 
   if (!slug || !userId) {
@@ -161,7 +156,6 @@ const likeBlog = catchAsync(async (req, res) => {
     );
   }
 
-  // 2. Pass variables downstream to your business service layer
   const data = await blogService.likeBlog(slug, userId);
 
   return sendSuccessResponse(res, {
@@ -171,9 +165,6 @@ const likeBlog = catchAsync(async (req, res) => {
   });
 });
 
-/* =========================================================
-   EXPORT CONTROLLER
-========================================================= */
 export const blogController = {
   createBlog,
   getAllBlogs,

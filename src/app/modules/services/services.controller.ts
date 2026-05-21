@@ -5,6 +5,34 @@ import { serviceService } from './services.service';
 import AppError from '@/app/errors/handlers/AppError';
 import { cloudinaryConfig } from '@/utils/uploadFile';
 
+const parseMultipartBody = (body: Record<string, any>) => {
+  const parsed: Record<string, any> = {};
+
+  Object.keys(body).forEach((key) => {
+    const value = body[key];
+
+    if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
+      try {
+        parsed[key] = JSON.parse(value);
+        return;
+      } catch (e) {}
+    }
+
+    const match = key.match(/^([^\[]+)\[([^\]]+)\]$/);
+    if (match) {
+      const [_, field, lang] = match;
+      if (!parsed[field]) parsed[field] = {};
+      parsed[field][lang] = value;
+    } else {
+      if (parsed[key] === undefined) {
+        parsed[key] = value;
+      }
+    }
+  });
+
+  return parsed;
+};
+
 // 1. Define getAllServices
 const getAllServices = catchAsync(async (_req, res) => {
   const data = await serviceService.getAllServices();
@@ -31,6 +59,9 @@ const createService = catchAsync(async (req, res) => {
     throw new AppError('Service image is required', StatusCodes.BAD_REQUEST);
   }
 
+  // Restructure form data keys into localized structures
+  const formattedBody = parseMultipartBody(req.body);
+
   const uploadResult = await cloudinaryConfig.uploadFileToCloudinary(
     req.file.buffer,
     req.file.originalname,
@@ -38,7 +69,7 @@ const createService = catchAsync(async (req, res) => {
   );
 
   const data = await serviceService.createService({
-    ...req.body,
+    ...formattedBody,
     image: uploadResult.secure_url,
   });
 
@@ -52,7 +83,9 @@ const createService = catchAsync(async (req, res) => {
 // 4. Define updateService
 const updateService = catchAsync(async (req, res) => {
   const { id } = req.params;
-  let payload = { ...req.body };
+
+  // Restructure form data keys into localized structures
+  let payload = parseMultipartBody(req.body);
 
   if (req.file) {
     const existing = await serviceService.getServiceById(id);
@@ -97,7 +130,6 @@ const deleteService = catchAsync(async (req, res) => {
   });
 });
 
-// Now the shorthand properties will work because the variables exist in scope
 export const serviceController = {
   createService,
   getAllServices,

@@ -4,33 +4,17 @@ import { StatusCodes } from 'http-status-codes';
 import { teamService } from './team.service';
 import { cloudinaryConfig } from '@/utils/uploadFile';
 
-const parseJSONIfString = (value: any) => {
-  if (typeof value === 'string') {
-    try {
-      return JSON.parse(value);
-    } catch {
-      return value;
-    }
-  }
-  return value;
-};
-
 export const createTeam = catchAsync(async (req, res) => {
+  // Use data post Zod parsing / processing validation directly
   const payload = { ...req.body };
 
-  // SOCIALS + EDUCATION + EXPERIENCE parsing
-  payload.socials = parseJSONIfString(payload.socials);
-  payload.education = parseJSONIfString(payload.education);
-  payload.experience = parseJSONIfString(payload.experience);
-  payload.details = parseJSONIfString(payload.details);
-  // IMAGE upload
+  // IMAGE upload handling
   if (req.file) {
     const uploadResult = await cloudinaryConfig.uploadFileToCloudinary(
       req.file.buffer,
       req.file.originalname,
       { folder: 'team' }
     );
-
     payload.image = uploadResult.secure_url;
   }
 
@@ -65,18 +49,14 @@ export const getTeamById = catchAsync(async (req, res) => {
 
 export const updateTeam = catchAsync(async (req, res) => {
   const payload = { ...req.body };
-  payload.socials = parseJSONIfString(payload.socials);
-  payload.education = parseJSONIfString(payload.education);
-  payload.experience = parseJSONIfString(payload.experience);
-  payload.details = parseJSONIfString(payload.details);
-  // IMAGE update
+
+  // IMAGE update handling
   if (req.file) {
     const uploadResult = await cloudinaryConfig.uploadFileToCloudinary(
       req.file.buffer,
       req.file.originalname,
       { folder: 'team' }
     );
-
     payload.image = uploadResult.secure_url;
   }
 

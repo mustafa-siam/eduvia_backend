@@ -1,6 +1,14 @@
 import { Schema, model, Document } from 'mongoose';
 import { ITeam } from './team.schema';
 
+const localizedSchema = new Schema(
+  {
+    en: { type: String, required: true, trim: true },
+    bn: { type: String, required: true, trim: true },
+  },
+  { _id: false }
+);
+
 const socialSchema = new Schema(
   {
     platform: { type: String, required: true, trim: true },
@@ -11,42 +19,35 @@ const socialSchema = new Schema(
 
 const educationSchema = new Schema(
   {
-    title: { type: String, required: true, trim: true },
+    title: { type: localizedSchema, required: true },
   },
   { _id: false }
 );
 
 const experienceSchema = new Schema(
   {
-    title: { type: String, required: true, trim: true },
+    title: { type: localizedSchema, required: true },
   },
   { _id: false }
 );
 
 const teamSchema = new Schema<ITeam & Document>(
   {
-    name: { type: String, required: true, trim: true },
-
-    role: { type: String, required: true, trim: true },
-
+    name: { type: localizedSchema, required: true },
+    role: { type: localizedSchema, required: true },
     image: { type: String, required: true, trim: true },
-
     details: {
-      type: String,
-      trim: true,
-      default: '',
+      type: localizedSchema,
+      required: false,
     },
-
     socials: {
       type: [socialSchema],
       default: [],
     },
-
     education: {
       type: [educationSchema],
       default: [],
     },
-
     experience: {
       type: [experienceSchema],
       default: [],
