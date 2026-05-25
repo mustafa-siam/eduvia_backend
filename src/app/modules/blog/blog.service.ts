@@ -119,9 +119,14 @@ const permanentDeleteBlog = async (id: string) => {
 };
 
 /* =========================================================
-   LIKE / UNLIKE (SAFE + CLEAN)
+   LIKE BLOG (ONE DEVICE = ONE LIKE, NO UNLIKE)
+   - deviceId comes from frontend localStorage (anon-device-id)
+   - likedBy[] tracks which devices have liked
+   - Once liked, the same deviceId cannot like again
+   - Frontend also guards with localStorage 'liked-{slug}'
+   - Both layers together make it bulletproof
 ========================================================= */
-const likeBlog = async (slug: string, userId: string) => {
+const likeBlog = async (slug: string, deviceId: string) => {
   const blog = await BlogModel.findOne({
     slug,
     isDeleted: { $ne: true },
@@ -131,25 +136,26 @@ const likeBlog = async (slug: string, userId: string) => {
     throw new AppError('Blog not found', StatusCodes.NOT_FOUND);
   }
 
-  // Normalize arrays and counts defensively
+  // Normalize defensively
   blog.likedBy = blog.likedBy ?? [];
   blog.likes = blog.likes ?? 0;
 
-  const alreadyLiked = blog.likedBy.includes(userId);
+  // Check if this device has already liked
+  const alreadyLiked = blog.likedBy.includes(deviceId);
 
   if (alreadyLiked) {
-    // Unlike Action: Filter out the unique anonymous ID string
-    blog.likedBy = blog.likedBy.filter((id) => id !== userId);
-    blog.likes = Math.max(0, blog.likes - 1);
-  } else {
-    // Like Action: Register the anonymous ID string to track status
-    blog.likedBy.push(userId);
-    blog.likes += 1;
+    // Device already liked — do nothing, just return current state
+    // Frontend localStorage prevents reaching here in normal flow,
+    // but this is the backend safety net
+    return blog.toObject();
   }
+
+  // New like — register device and increment count
+  blog.likedBy.push(deviceId);
+  blog.likes += 1;
 
   await blog.save();
 
-  // Return formatted JavaScript plain data structure back to controller
   return blog.toObject();
 };
 

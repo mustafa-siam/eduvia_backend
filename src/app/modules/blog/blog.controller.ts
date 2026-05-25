@@ -146,6 +146,13 @@ const permanentDeleteBlog = catchAsync(async (req, res) => {
   });
 });
 
+/* =========================================================
+   LIKE BLOG (ANONYMOUS — ONE DEVICE ONE LIKE)
+   - slug: identifies the blog post
+   - userId: persistent anonymous device ID from frontend localStorage
+   - Backend service checks likedBy[] to prevent double-liking
+   - No unlike — one-way only, consistent with frontend localStorage guard
+========================================================= */
 const likeBlog = catchAsync(async (req, res) => {
   const { slug, userId } = req.body;
 
@@ -160,7 +167,7 @@ const likeBlog = catchAsync(async (req, res) => {
 
   return sendSuccessResponse(res, {
     statusCode: StatusCodes.OK,
-    message: 'Blog reaction status synchronized successfully',
+    message: 'Blog liked successfully',
     data,
   });
 });
