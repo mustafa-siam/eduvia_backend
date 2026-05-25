@@ -7,12 +7,10 @@ import AppError from '@/app/errors/handlers/AppError';
 
 const parseLocalizedPayload = (body: any) => {
   const payload = { ...body };
-
   const localizedFields = ['title', 'excerpt', 'content', 'category', 'author', 'authorRole'];
 
   for (const field of localizedFields) {
     const value = payload[field];
-
     if (typeof value === 'string' && (value.startsWith('{') || value.startsWith('['))) {
       try {
         payload[field] = JSON.parse(value);
@@ -147,11 +145,10 @@ const permanentDeleteBlog = catchAsync(async (req, res) => {
 });
 
 /* =========================================================
-   LIKE BLOG (ANONYMOUS — ONE DEVICE ONE LIKE)
+   TOGGLE LIKE (ANONYMOUS — ONE DEVICE TOGGLE LIKE/UNLIKE)
    - slug: identifies the blog post
    - userId: persistent anonymous device ID from frontend localStorage
-   - Backend service checks likedBy[] to prevent double-liking
-   - No unlike — one-way only, consistent with frontend localStorage guard
+   - Returns blog data + isLiked boolean so frontend stays in sync
 ========================================================= */
 const likeBlog = catchAsync(async (req, res) => {
   const { slug, userId } = req.body;
@@ -163,12 +160,12 @@ const likeBlog = catchAsync(async (req, res) => {
     );
   }
 
-  const data = await blogService.likeBlog(slug, userId);
+  const { blog, isLiked } = await blogService.toggleLikeBlog(slug, userId);
 
   return sendSuccessResponse(res, {
     statusCode: StatusCodes.OK,
-    message: 'Blog liked successfully',
-    data,
+    message: isLiked ? 'Blog liked successfully' : 'Blog unliked successfully',
+    data: { ...blog, isLiked },
   });
 });
 
